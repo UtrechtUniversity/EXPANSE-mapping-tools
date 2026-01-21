@@ -1,10 +1,11 @@
 from ibridges.interactive import interactive_auth
 from ibridges.path import IrodsPath
-from ibridges import download, MetaData
+from ibridges import download
 from pathlib import Path
 import os
 from itertools import product
-from settings import COUNTRIES, CATEGORIES, FOOD_PREFIXES, PHYSIO_CHEMICAL_PREFIXES, BUILT_PREFIXES, LOCAL_PATH
+from settings import COUNTRIES, CATEGORIES, FOOD_PREFIXES, PHYSICAL_CHEMICAL_PREFIXES, BUILT_PREFIXES, LOCAL_PATH, INDEXER, TIMEREGEX
+import shutil
 
 class YodaCrawler(): 
 
@@ -23,42 +24,55 @@ class YodaCrawler():
 
     def download_everything_in_collection(self, folder_path, prefix_list, country):
         print(f"Starting download. This is my folder path: {folder_path}")
-        for object in folder_path.collection.data_objects:
+        if "temp" in str(folder_path):
+            return
 
+        if "AirPollution" in str(folder_path):
+            return
+
+        for object in folder_path.collection.data_objects:
             tiff_name = Path(object.path).stem
-            print(tiff_name)
-            
+            # print(f"This is the tiff name: {tiff_name}")
+
             found_prefix = ""
+            # print(f"here is te prefix list: {prefix_list}")
             for prefix in prefix_list:
                 if tiff_name.startswith(prefix):
                     found_prefix = prefix
-                    break
             
-            if not found_prefix:
+            if found_prefix == "":
+                # print(f"Not this one!: found_prefix{found_prefix}, prefix: {prefix}")
                 continue
 
             if not "XX" in tiff_name: # This is so we skip the daily temperature files
-                print(f"Oh no a temperature file: {tiff_name}")
+                print(f"Oh no a daily temperature file: {tiff_name}")
                 continue
+
+            # if not "_00_" in tiff_name and not "_01_" in tiff_name and not "_02_" in tiff_name and not "_04_" and not "_05_" and not "_06_" in tiff_name: # Temporary, just to download 2015
+            #     continue
+            # if "_03_" in tiff_name or "_23_" in tiff_name: # Temporary, just to download Jan and Feb of 2020
+            #     continue
+
 
             tiff_path = folder_path.joinpath(object.name)
             save_path = Path(LOCAL_PATH).joinpath(found_prefix, country)
 
-            # if savepath does not exist, create it
+            print(f"Downloading {tiff_path} to {save_path}")
+            # # if savepath does not exist, create it
             if not save_path.exists():
                 os.makedirs(save_path)
 
-            print(f"Downloading {tiff_name}")
+
             ops = download(tiff_path, save_path, overwrite=True)
 
-    def crawl(self, countries=("Netherlands", )):        
+    def crawl(self, countries):        
         for country, category in product(countries, CATEGORIES):
             if category == "Food":
                 prefix_list = FOOD_PREFIXES
             elif category == "Built":
                 prefix_list = BUILT_PREFIXES
             elif category == "Physico-chemical":
-                prefix_list = PHYSIO_CHEMICAL_PREFIXES
+                prefix_list = PHYSICAL_CHEMICAL_PREFIXES
 
             print(country, category)
             folder_path = self.expanse_path/country/category
@@ -67,31 +81,33 @@ class YodaCrawler():
             if category == "Physico-chemical":
                 for subfolder in folder_path.collection.subcollections:
                     subfolder_name = folder_path/subfolder.name
-                    # print(subfolder_name)
+                    print(subfolder_name)
                     self.download_everything_in_collection(subfolder_name, prefix_list, country)
             else:
+                # pass # Temporary, only downloading physico-chemical for now
                 self.download_everything_in_collection(folder_path, prefix_list, country)
 
+
+def build_folder_structure():
+    local_path = Path(LOCAL_PATH)
+    if not local_path.exists():
+        print("Check the local download path and make sure that it exists on your machine before continuing")
+        return
+    
+    # Make folders for each theme prefix
+    for prefix in BUILT_PREFIXES + PHYSICAL_CHEMICAL_PREFIXES:
+        theme_path = local_path / prefix
+        theme_path.mkdir(parents=False, exist_ok=True) # exist_ok=True doesnt overwrite existing dir, it prevents raising FileExistsError
+        shutil.copy2(INDEXER, theme_path / "indexer.properties")
+        shutil.copy2(TIMEREGEX, theme_path / "timeregex.properties")
+
+
 if __name__ == "__main__":
+    build_folder_structure()
+
     yoda_crawler = YodaCrawler()
-
     yoda_crawler.connect()
-    yoda_crawler.crawl()
+    yoda_crawler.crawl(countries=COUNTRIES["EUROPE"][10:]) # Still need to finish France and Germany. Plus, need to add 2003 and 2023 to all countries. France need to do from scratch.
+    # yoda_crawler.crawl(countries=["Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania",  "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "France"])
+
     yoda_crawler.disconnect()
-
-# print(expanse_path.collection.subcollections)
-# ops = download(expanse_path.joinpath('BSI_DIS_XX_XX_13_v2.tif'), LOCAL_PATH, overwrite=True)
-# ops.print_summary()
-
-
-
-        # print(type(self.research_path))
-        # if download:
-        #     pass
-        # else:
-        #     print(self.research_path.collection.subcollections)
-
-        # Set up iBridges session
-        # session = interactive_auth()
-        # home_path = IrodsPath(session, session.home)
-
