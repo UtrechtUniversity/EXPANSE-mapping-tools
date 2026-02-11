@@ -27,8 +27,8 @@ class YodaCrawler():
         if "temp" in str(folder_path):
             return
 
-        if "AirPollution" in str(folder_path):
-            return
+        # if "AirPollution" in str(folder_path):
+        #     return
 
         for object in folder_path.collection.data_objects:
             tiff_name = Path(object.path).stem
@@ -48,8 +48,8 @@ class YodaCrawler():
                 print(f"Oh no a daily temperature file: {tiff_name}")
                 continue
 
-            # if not "_00_" in tiff_name and not "_01_" in tiff_name and not "_02_" in tiff_name and not "_04_" and not "_05_" and not "_06_" in tiff_name: # Temporary, just to download 2015
-            #     continue
+            if not "_00_" in tiff_name: # Temporary, just to download 2015
+                continue
             # if "_03_" in tiff_name or "_23_" in tiff_name: # Temporary, just to download Jan and Feb of 2020
             #     continue
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     yoda_crawler = YodaCrawler()
     yoda_crawler.connect()
-    yoda_crawler.crawl(countries=COUNTRIES["EUROPE"][10:]) # Still need to finish France and Germany. Plus, need to add 2003 and 2023 to all countries. France need to do from scratch.
+    yoda_crawler.crawl(countries=COUNTRIES["EUROPE"]) # Still need to finish France and Germany. Plus, need to add 2003 and 2023 to all countries. France need to do from scratch.
     # yoda_crawler.crawl(countries=["Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania",  "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "France"])
 
     yoda_crawler.disconnect()

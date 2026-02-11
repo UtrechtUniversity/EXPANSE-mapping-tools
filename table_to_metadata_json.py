@@ -21,7 +21,7 @@ def comman_line_router(args):
         sys.exit(1)
 
     table_path = args[1]
-    json_path - args[2]
+    json_path = args[2]
     table_to_json(table_path, json_path)
 
 if __name__ == "__main__":
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         comman_line_router(sys.argv)
     
     else:
-        table_path = r"C:/Users/5298954\Documents/Projects/Exposure_Map/metadata_table.csv"
-        json_path = r"C:\Users\5298954\Documents\Github_Repos\exposome-maps\metadata.json"
+        table_path = r"C:/Users/5298954/Documents/Github_Repos/Exposome-Map-Documents/Exposome_maps_inventory/Exposome maps inventory.csv"
+        json_path = r"C:/Users/5298954/Documents/Github_Repos/exposome-maps/metadata.json"
         
         table_to_json(table_path, json_path)

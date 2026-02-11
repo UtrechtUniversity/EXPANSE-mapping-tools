@@ -30,16 +30,17 @@ def update_xml_from_row(row, xml_path):
         print(f"Updating summary/abstract to: {table_abstract}")
         element_abstract.text = table_abstract
 
-    # ### Update Metadata last updated ### TODO: Raise flag if we're updating anything, because this one will need to be updated too TODO: Make sure date format is correct
-    table_md_last_updated = row['Metadata last updated']
+    # ### Update Metadata last updated
+    table_md_last_updated = datetime.strptime(row['Metadata last updated'], "%d-%m-%Y").date().isoformat() 
+
     element_md_last_updated = root.find('gmd:dateStamp/gco:Date', namespaces=ns)
 
     if table_md_last_updated != element_md_last_updated.text:
         print(f"Updating Metadata last updated to: {table_md_last_updated}")
         element_md_last_updated.text = table_md_last_updated
 
-    ### Update Dataset last revised ### TODO: Make sure date format is correct
-    table_dataset_last_revised = row['Dataset last revised']
+    ### Update Dataset last revised
+    table_dataset_last_revised = datetime.strptime(row['Dataset last revised'], "%d-%m-%Y").date().isoformat() 
     element_dataset_last_revised = root.find('gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', namespaces=ns)
 
     if table_dataset_last_revised != element_dataset_last_revised.text:
@@ -127,10 +128,10 @@ def update_xml_from_row(row, xml_path):
         print(f"CRS in table not recognized, can't update! {table_crs}")
 
     # ### Update Online Resource ###
-    table_online_resource = platform_base_url + row['catalogue_page']
+    table_online_resource = platform_base_url + "catalogue_pages/" + row['catalogue_page'] + ".html"
     element_online_resource = root.find('gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', namespaces=ns)
 
-    if platform_base_url + table_online_resource != element_online_resource.text:
+    if table_online_resource != element_online_resource.text:
         print(f"Updating Online Resource to: {table_online_resource}")
         element_online_resource.text = table_online_resource
                                 
@@ -199,7 +200,7 @@ if __name__ == "__main__":
         comman_line_router(sys.argv)
     
     else:
-        table_path = r"C:/Users/5298954/Documents/Projects/Exposure_Map/metadata_table.csv"
+        table_path = r"C:/Users/5298954/Documents/Github_Repos/Exposome-Map-Documents/Exposome_maps_inventory/Exposome maps inventory.csv"
         df = pd.read_csv(table_path, dtype={'show_on_map': 'bool'}, on_bad_lines='skip', header=0, delimiter=';', keep_default_na=False)#, encoding='latin1')
 
         df.apply(lambda row: update_xml_from_row(row, row["Local path to XML file"]), axis=1)
@@ -253,7 +254,7 @@ if __name__ == "__main__":
         #         "metadata_Walkabiliy_1000m_buffer"
         # ]
 
-        # xmls_base_path = f"C:\\Users\\5298954\\Documents\\Github_Repos\\exposome-maps\\metadata_XMLs"
+        # xmls_base_path = f"C:\\Users\\5298954\\Documents\\Github_Repos\\\Exposome-Map-Documents\\metadata_XMLs"
         # for xml in xmls:
         #     shutil.copy2(r"C:\Users\5298954\Documents\Projects\Exposure_Map\project_geoserver\metadata_xmls\NDV_MD3_XX_XX_05_v2_metadata\a2a7b042-706e-492f-8942-5ffd8556edac\metadata\metadata.xml",
         #                 os.path.join(xmls_base_path, xml+".xml"))

@@ -5,7 +5,7 @@ TIMEREGEX = "C:/Users/5298954/Documents/Projects/Exposure_Map/timeregex.properti
 
 
 # CATEGORIES = ["Food", "Physico-chemical", "Built"]
-CATEGORIES = ["Built"]
+CATEGORIES = ["Physico-chemical"]
 FOOD_PREFIXES = [
     "FastF_800m",
     "Rest_800m",
@@ -16,7 +16,7 @@ FOOD_PREFIXES = [
 ]
 
 PHYSICAL_CHEMICAL_PREFIXES = [
-    # "NO2B25_AAV", 
+    "NO2B25_AAV", 
     # "NO2B25_MAV", 
     # "P10B25_AAV", 
     # "P10B25_MAV", 
@@ -33,15 +33,15 @@ PHYSICAL_CHEMICAL_PREFIXES = [
 ]
 
 BUILT_PREFIXES = [
-    "NDV_MD3", 
-    "NDV_MD5", 
-    "NDV_MD1", 
-    "NDV_ST3", 
-    "NDV_ST5", 
-    "NDV_ST1", 
-    "NDV_ME3", 
-    "NDV_ME5", 
-    "NDV_ME1", 
+    # "NDV_MD3", 
+    # "NDV_MD5", 
+    # "NDV_MD1", 
+    # "NDV_ST3", 
+    # "NDV_ST5", 
+    # "NDV_ST1", 
+    # "NDV_ME3", 
+    # "NDV_ME5", 
+    # "NDV_ME1", 
     # "MVI_MD3", 
     # "MVI_MD5", 
     # "MVI_MD1", 
