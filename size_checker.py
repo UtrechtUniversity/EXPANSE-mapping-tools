@@ -12,7 +12,7 @@ def get_directory_size(directory):
     return total_size
 
 if __name__ == "__main__":
-    directory = "C:/Users/5298954/Documents/Projects/Exposure_Map/project_geoserver/data_dir/data/NO2B25_AAV"
+    directory = r"C:\Users\5298954\Documents\Projects\Exposure_Map\project_geoserver\data_dir\data"
     size_bytes = get_directory_size(directory)
     size_gb = size_bytes / (1024 ** 3)
     print(f"Total size of directory '{directory}': {size_gb:.2f} GB")

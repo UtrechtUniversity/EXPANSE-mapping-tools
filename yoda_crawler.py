@@ -48,10 +48,10 @@ class YodaCrawler():
                 print(f"Oh no a daily temperature file: {tiff_name}")
                 continue
 
-            if not "_00_" in tiff_name: # Temporary, just to download 2015
-                continue
-            # if "_03_" in tiff_name or "_23_" in tiff_name: # Temporary, just to download Jan and Feb of 2020
+            # if not "_21_" in tiff_name and not "_22_" in tiff_name and not "_23_" in tiff_name: # Temporary, just to download 2015
             #     continue
+            if "_00_" in tiff_name: # Temporary, just to download Jan and Feb of 2020
+                continue
 
 
             tiff_path = folder_path.joinpath(object.name)
@@ -103,11 +103,10 @@ def build_folder_structure():
 
 
 if __name__ == "__main__":
-    build_folder_structure()
+    # build_folder_structure()
 
     yoda_crawler = YodaCrawler()
     yoda_crawler.connect()
-    yoda_crawler.crawl(countries=COUNTRIES["EUROPE"]) # Still need to finish France and Germany. Plus, need to add 2003 and 2023 to all countries. France need to do from scratch.
-    # yoda_crawler.crawl(countries=["Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania",  "Netherlands", "Norway", "Poland", "Portugal", "Romania", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "France"])
-
+    yoda_crawler.crawl(countries=COUNTRIES["EUROPE"][7:])
+    # yoda_crawler.crawl(countries=COUNTRIES["EUROPE"][-7:])
     yoda_crawler.disconnect()

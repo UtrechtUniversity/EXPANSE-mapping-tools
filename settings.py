@@ -1,4 +1,4 @@
-LOCAL_PATH = "C:/Users/5298954/Documents/Projects/Exposure_Map/project_geoserver/data_dir/data"
+LOCAL_PATH = "D:/Projects/Exposure_Map/project_geoserver/data_dir/data2"
 
 INDEXER = "C:/Users/5298954/Documents/Projects/Exposure_Map/indexer.properties"
 TIMEREGEX = "C:/Users/5298954/Documents/Projects/Exposure_Map/timeregex.properties"
